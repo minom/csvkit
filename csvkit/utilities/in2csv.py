@@ -19,6 +19,8 @@ class In2CSV(CSVKitUtility):
             help='Specifies a top-level key to use look within for a list of objects to be converted when processing JSON.')
         self.argparser.add_argument('-y', '--snifflimit', dest='snifflimit', type=int,
             help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
+        self.argparser.add_argument('--export', dest='export', default=False, action='store_true',
+            help='Export each sheet to a csv  of the same name in the same directory')
         self.argparser.add_argument('--sheet', dest='sheet',
             help='The name of the XLSX sheet to operate on.')
         self.argparser.add_argument('--no-inference', dest='no_inference', action='store_true',
@@ -60,6 +62,9 @@ class In2CSV(CSVKitUtility):
         if self.args.snifflimit:
             kwargs['snifflimit'] = self.args.snifflimit
 
+        if self.args.export:
+            kwargs['export'] = self.args.export
+
         if self.args.sheet:
             kwargs['sheet'] = self.args.sheet
 
@@ -80,7 +85,7 @@ class In2CSV(CSVKitUtility):
 def launch_new_instance():
     utility = In2CSV()
     utility.main()
-    
+
 if __name__ == "__main__":
     launch_new_instance()
 
