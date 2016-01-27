@@ -42,7 +42,7 @@ def xlsx2csv(f, output=None, **kwargs):
     Blank headers are also possible.
     """
     if 'export' in kwargs:
-        sheets2csvs(f)
+        sheets2csvs(f, kwargs['export'])
         return ''
 
     book = load_workbook(f, use_iterators=True, data_only=True)
@@ -102,7 +102,7 @@ def sheet2csv(sheet, output=None):
     return ''
 
 
-def sheets2csvs(f, output=None, **kwargs):
+def sheets2csvs(f, output_dir, output=None, **kwargs):
     """
     Convert an Excel .xlsx file to csv.
 
@@ -114,6 +114,7 @@ def sheets2csvs(f, output=None, **kwargs):
     for name in book.get_sheet_names():
       sheet = book.get_sheet_by_name(name)
       csv = sheet2csv(sheet)
-      with open(name + ".csv", "w") as f:
+
+      with open(output_dir + name + ".csv", "w+") as f:
         f.write(csv)
         f.close()

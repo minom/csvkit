@@ -12,12 +12,12 @@ def join_rows(rows, joiner=' '):
     for row in rows[1:]:
         if len(row) == 0:
             row = ['']
-        
+
         fixed_row[-1] += "%s%s" % (joiner, row[0])
         fixed_row.extend(row[1:])
 
     return fixed_row
-        
+
 def fix_length_errors(errs, target_line_length, joiner=' '):
     """
     If possible, transform the rows backed up in the list of errors into rows of the correct length.
@@ -28,7 +28,7 @@ def fix_length_errors(errs, target_line_length, joiner=' '):
 
     fixed_rows = []
     backlog = []
-    
+
     for err in errs:
         if type(err) is not LengthMismatchError:
             return [] # give up if any are not length errors
@@ -39,7 +39,7 @@ def fix_length_errors(errs, target_line_length, joiner=' '):
         if len(fixed_row) == target_line_length:
             fixed_rows.append(fixed_row)
             backlog = [] # reset
-        
+
     return fixed_rows
 
 def extract_joinable_row_errors(errs):
@@ -75,7 +75,7 @@ class RowChecker(object):
         A generator which yields rows which are ready to write to output.
         """
         line_number = self.reader.line_num
-        
+
         for row in self.reader:
             try:
                 if len(row) != len(self.column_names):
@@ -86,7 +86,7 @@ class RowChecker(object):
                 self.errors.append(e)
 
                 joinable_row_errors = extract_joinable_row_errors(self.errors)
-                
+
                 while joinable_row_errors:
                     fixed_row = join_rows([err.row for err in joinable_row_errors], joiner=' ')
 
@@ -98,16 +98,16 @@ class RowChecker(object):
                         self.joins += 1
 
                         yield fixed_row
-                        
+
                         for fixed in joinable_row_errors:
                             self.errors.remove(fixed)
-                        
+
                         break
 
                     joinable_row_errors = joinable_row_errors[1:] # keep trying in case we're too long because of a straggler
 
             except CSVTestException as e:
                 self.errors.append(e)
-        
+
             line_number = self.reader.line_num
- 
+

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from csvkit import convert
+import os
 from csvkit.cli import CSVKitUtility
 
 class In2CSV(CSVKitUtility):
@@ -19,7 +20,7 @@ class In2CSV(CSVKitUtility):
             help='Specifies a top-level key to use look within for a list of objects to be converted when processing JSON.')
         self.argparser.add_argument('-y', '--snifflimit', dest='snifflimit', type=int,
             help='Limit CSV dialect sniffing to the specified number of bytes. Specify "0" to disable sniffing entirely.')
-        self.argparser.add_argument('--export', dest='export', default=False, action='store_true',
+        self.argparser.add_argument('--export', dest='export', default=os.getcwd(), 
             help='Export each sheet to a csv  of the same name in the same directory')
         self.argparser.add_argument('--sheet', dest='sheet',
             help='The name of the XLSX sheet to operate on.')
